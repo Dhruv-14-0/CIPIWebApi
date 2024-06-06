@@ -1,6 +1,8 @@
 ﻿using Business_logic_Layer;
+using Data_Access_Layer;
 using Data_Access_Layer.Repository.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web_API.Controllers
@@ -41,6 +43,23 @@ namespace Web_API.Controllers
             {
                 return StatusCode(500, new ResponseResult { Data = ex.Message, Result = ResponseStatus.Error });
             }
+        }
+        [HttpGet]
+        [Route("MissionApplicationList")]
+        public ResponseResult MissionApplicationList()
+        {
+            ResponseResult result = new ResponseResult();
+            try
+            {
+                result.Data = _bllAdminUser.GetMissionApplicationList();
+                result.Result = ResponseStatus.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Message = ex.Message;
+                result.Result = ResponseStatus.Error;
+            }
+            return result;
         }
     }
 }

@@ -33,5 +33,21 @@ namespace Web_API.Controllers
             }
             return result;
         }
+        [HttpPost]
+        [Route("ApplyMission")]
+        public ResponseResult ApplyMission(MissionApplication missionApplication)
+        {
+            try
+            {
+                result.Data = _balMission.ApplyMission(missionApplication);
+                result.Result = ResponseStatus.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Result = ResponseStatus.Error;
+                result.Message = ex.Message;
+            }
+            return result;
+        }
     }
 }

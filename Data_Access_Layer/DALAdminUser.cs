@@ -87,5 +87,9 @@ namespace Data_Access_Layer
                 throw ex;
             }
         }
+        public List<MissionApplication> GetMissionApplicationList()
+        {
+            return _appDbContext.MissionApplication.Where(ma => !ma.IsDeleted).ToList();
+        }
     }
 }

@@ -26,5 +26,9 @@ namespace Business_logic_Layer
         {
             return await _dalAdminUser.DeleteUserAndUserDetail(id);
         }
+        public List<MissionApplication> GetMissionApplicationList()
+        {
+            return _dalAdminUser.GetMissionApplicationList();
+        }
     }
 }

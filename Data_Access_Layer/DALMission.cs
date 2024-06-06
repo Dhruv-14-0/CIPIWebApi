@@ -149,5 +149,109 @@ namespace Data_Access_Layer
         {
             return await _cIDbContext.MissionSkill.Where(x => !x.IsDeleted && x.Status == "active").ToListAsync();
         }
+
+        public string ApplyMission(MissionApplication missionApplication)
+        {
+            string result = "";
+            try
+            {
+                using (var transaction = _cIDbContext.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var mission = _cIDbContext.Missions.FirstOrDefault(m => m.Id == missionApplication.MissionId && m.IsDeleted == false);
+                        if (mission != null)
+                        {
+                            if (mission.TotalSheets > 0)
+                            {
+                                var newApplication = new MissionApplication
+                                {
+                                    MissionId = missionApplication.MissionId,
+                                    UserId = missionApplication.UserId,
+                                    AppliedDate = DateTime.UtcNow,
+                                    Status = false,
+                                    CreatedDate = DateTime.UtcNow,
+                                    IsDeleted = false,
+                                };
+
+                                _cIDbContext.MissionApplication.Add(newApplication);
+                                _cIDbContext.SaveChanges();
+
+                                mission.TotalSheets = mission.TotalSheets - 1;
+                                _cIDbContext.SaveChanges();
+
+                                result = "Mission Apply Successfully.";
+                            }
+                            else
+                            {
+                                result = "Mission Housefull";
+                            }
+                        }
+                        else
+                        {
+                            result = "Mission Not Found.";
+                        }
+
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw ex;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            return result;
+        }
+        public string MissionApplicationApprove(int id)
+        {
+            var result = "";
+            try
+            {
+                var missionApplication = _cIDbContext.MissionApplication.FirstOrDefault(ma => ma.Id == id);
+                if (missionApplication != null)
+                {
+                    missionApplication.Status = true;
+                    _cIDbContext.SaveChanges();
+                    result = "Mission is approved";
+                }
+                else
+                {
+                    result = "Mission Application is not found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            return result;
+        }
+        public string MissionApplicationDelete(int id)
+        {
+            var result = "";
+            try
+            {
+                var existed = _cIDbContext.MissionApplication.Where(x => x.Id == id && !x.IsDeleted).FirstOrDefault();
+                if(existed != null)
+                {
+                    existed.IsDeleted = true;
+                    _cIDbContext.SaveChanges();
+                    result = "Mission Apllication Deleted";
+                }
+                else
+                {
+                    result = "Mission applicarion Doesnt found";
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            return result;
+        }
     }
 }

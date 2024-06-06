@@ -51,5 +51,17 @@ namespace Business_logic_Layer
         {
             return await _dalMission.GetMissionSkillList();
         }
+        public string ApplyMission(MissionApplication missionApplication)
+        {
+            return _dalMission.ApplyMission(missionApplication);
+        }
+        public string MissionApplicationApprove(int id)
+        {
+            return _dalMission.MissionApplicationApprove(id);
+        }
+        public string MissionApplicationDelete(int id)
+        {
+            return _dalMission.MissionApplicationDelete(id);
+        }
     }
 }

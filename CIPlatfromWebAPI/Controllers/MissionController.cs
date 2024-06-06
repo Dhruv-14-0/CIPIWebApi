@@ -171,5 +171,35 @@ namespace Web_API.Controllers
             }
             return result;
         }
+        [HttpGet]
+        [Route("MissionApplicationApprove/{id}")]
+        public ResponseResult MissionApplicationApprove(int id)
+        {
+            try
+            {
+                result.Data = _balMission.MissionApplicationApprove(id);
+                result.Result = ResponseStatus.Success;
+            }
+            catch (Exception ex)
+            {
+                result.Result = ResponseStatus.Error;
+                result.Message = ex.Message;
+            }
+            return result;
+        }
+        [HttpGet("MissionApplicationDelete/{id}")]
+        public ResponseResult MissionApplicationDelete(int id)
+        {
+            try
+            {
+                result.Data = _balMission.MissionApplicationDelete(id);
+                result.Result = ResponseStatus.Success;
+            }catch (Exception ex)
+            {
+                result.Result = ResponseStatus.Error;
+                result.Message = ex.Message;
+            }
+            return result;
+        }
     }
 }
